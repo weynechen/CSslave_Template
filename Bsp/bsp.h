@@ -10,7 +10,7 @@
 
 #ifndef __BSP_H
 #define __BSP_H
-#include "stdint.h"
+#include "stm32f1xx_hal.h"
 
 /*****************按键接口*************************/
 typedef enum
@@ -25,11 +25,6 @@ typedef enum
 
 KeyTypeDef Key_Scan(void);
 /********************************************/
-
-/***************时钟配置********************/
-void MCLK_Init(uint16_t frequency);
-
-/*****************************************/
 
 /***********LCD 驱动接口***********************/
 
@@ -130,7 +125,6 @@ void SSD2828_Reset(void);
 void SSD2828_ShutDown(uint8_t state);
 
 void SSD2828_WriteCmd(uint8_t cmd);
-void SSD2828_WriteData(uint8_t data);
 uint8_t SSD2828_ACK(void);
 
 void SSD2828_WriteReg(uint8_t cmd, uint8_t data_high, uint8_t data_low);
@@ -139,6 +133,7 @@ uint16_t SSD2828_ReadReg(uint8_t reg);
 
 /***********SSD2828 MIPI操作接口**********************/
 void MIPI_SetMode(MIPI_ModeTypeDef mode);
+void MIPI_WriteData(uint8_t data);
 void MIPI_DcsShortWrite(uint8_t data);
 void MIPI_DcsLongWrite(uint32_t data);
 void MIPI_GenericShortWrite(uint8_t data);
@@ -146,7 +141,31 @@ void MIPI_GenericLongWrite(uint32_t data);
 MIPI_ReadTypeDef MIPI_DcsRead(uint8_t address, uint16_t length, uint8_t *return_value);
 MIPI_ReadTypeDef MIPI_GenericRead(uint8_t adr, uint16_t l, uint8_t *return_value);
 /****************************************************/
+/*******************其他*******************************/
+typedef enum {
+  MIPI,
+  RGB_SPI16BIT,
+  RGB_SPI8BIT,
+  RGB_SPI9BIT,
+  SPI_2_Data_Lane,
+  LVDS_666_VESA,
+  LVDS_666_JEIDA,
+  LVDS_888_VESA,
+  LVDS_888_JEIDA,
+} LCDTypeDef;
 
+void BSP_SetLCDType(LCDTypeDef type);
+
+void BSP_Init(void);
 void APP_Run(void);
+
+typedef enum
+{
+  LIGHT_GREEN,
+  LIGHT_RED,
+}LightTypeDef;
+
+void BSP_SetIndicatorLight(LightTypeDef type , StateTypeDef state);
+void LCD_Reset(uint8_t high_low);
 #endif
 /********************* (C) COPYRIGHT WEYNE CHEN *******END OF FILE ********/

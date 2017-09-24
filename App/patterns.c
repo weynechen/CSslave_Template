@@ -36,7 +36,7 @@ void FillFull(uint8_t r, uint8_t g, uint8_t b)
   }
 }
 
-void CrossTalk(void)
+void Crosstalk(void)
 {
   uint32_t h;
   uint32_t v1_2;

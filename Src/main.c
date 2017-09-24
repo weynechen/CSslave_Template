@@ -100,6 +100,7 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
   printf("\n--CD310--\n");
+  BSP_Init();
   /* USER CODE END 2 */
 
   APP_Run();

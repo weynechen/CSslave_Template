@@ -333,7 +333,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32F103xE</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FatFs/src/drivers;../Middlewares/Third_Party/FatFs/src;../Drivers/CMSIS/Include;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;..\Bsp</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F1xx_HAL_Driver/Inc;../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FatFs/src/drivers;../Middlewares/Third_Party/FatFs/src;../Drivers/CMSIS/Include;../Drivers/CMSIS/Device/ST/STM32F1xx/Include;..\Bsp;..\App</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -435,6 +435,26 @@
               <FileName>bsp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Bsp\bsp.c</FilePath>
+            </File>
+            <File>
+              <FileName>app_main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\app_main.c</FilePath>
+            </File>
+            <File>
+              <FileName>lcd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\lcd.c</FilePath>
+            </File>
+            <File>
+              <FileName>patterns.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\patterns.c</FilePath>
+            </File>
+            <File>
+              <FileName>initial.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\App\initial.c</FilePath>
             </File>
           </Files>
         </Group>

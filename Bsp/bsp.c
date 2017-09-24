@@ -16,6 +16,15 @@
 #include "sys.h"
 #include "tim.h"
 
+#define ADDR_FLASH_PAGE_10     ((uint32_t)0x08005000) /* Base @ of Page 10, 2 Kbytes */
+#define ADDR_FLASH_PAGE_5      ((uint32_t)0x08002800) /* Base @ of Page 5, 2 Kbytes */
+
+#define KEY_STORE_ADDRESS ADDR_FLASH_PAGE_10
+#define BOOT_KEY_ADDRESS ADDR_FLASH_PAGE_5
+
+//KEY
+const uint32_t __attribute__((at(KEY_STORE_ADDRESS + 20))) KeyStore = 0x5A2F5D81;
+
 
 KeyTypeDef Key_Scan(void)
 {
@@ -288,7 +297,7 @@ static AckTypeDef CDCE_Read8bit(uint8_t reg, uint16_t para_amount, uint8_t *data
 }
 
 
-void MCLK_Init(uint16_t f_out)
+static void MCLK_Init(uint16_t f_out)
 {
   uint8_t read_back;
   AckTypeDef ack;
@@ -475,6 +484,8 @@ void LCDDrv_WriteData(uint8_t para)
 
 void LCDDrv_SetTiming(void)
 {
+  MCLK_Init(LCDTiming.DCLK);
+  HAL_Delay(50);
   FPGA_WRITE_CMD(0xB0);
   FPGAWrite16BitData(LCDTiming.LCDH);
   FPGAWrite16BitData(LCDTiming.LCDV);
@@ -1012,7 +1023,7 @@ void SSD2828_WriteCmd(uint8_t cmd)
 }
 
 
-void SSD2828_WriteData(uint8_t data)
+void MIPI_WriteData(uint8_t data)
 {
   uint8_t i;
 
@@ -1147,7 +1158,6 @@ void SSD2828_Reset(void)
   HAL_Delay(50);
   SSD2828_RESET = 1;
   HAL_Delay(10);
-  MIPI_SetMode(LP);
 }
 
 
@@ -1350,6 +1360,56 @@ void MIPI_SetMode(MIPI_ModeTypeDef m)
   {
     SSD2828_WriteReg(0x00b7, 0x02, 0x4B);     //024B//030b
     SSD2828_SHUT = 0;
+  }
+}
+
+
+/***********************其他*******************************************/
+static struct
+{
+  GPIO_TypeDef *gpio_port;
+  uint16_t     gpio_pin;
+}
+ResetPortPin;
+
+
+void BSP_SetLCDType(LCDTypeDef type)
+{
+  if (type == MIPI)
+  {
+    ResetPortPin.gpio_port = MIPIRESET_GPIO_Port;
+    ResetPortPin.gpio_pin  = MIPIRESET_Pin;
+  }
+  else
+  {
+    ResetPortPin.gpio_port = GPIOE;
+    ResetPortPin.gpio_pin  = GPIO_PIN_6;
+  }
+}
+
+
+void BSP_Init(void)
+{
+  HAL_GPIO_WritePin(LS245_OE_GPIO_Port, LS245_OE_Pin, GPIO_PIN_RESET);
+}
+
+
+void LCD_Reset(uint8_t high_low)
+{
+  HAL_GPIO_WritePin(ResetPortPin.gpio_port, ResetPortPin.gpio_pin, high_low ? GPIO_PIN_SET : GPIO_PIN_RESET);
+}
+
+
+void BSP_SetIndicatorLight(LightTypeDef type, StateTypeDef state)
+{
+  if (type == LIGHT_GREEN)
+  {
+    HAL_GPIO_WritePin(GREEN_LED_GPIO_Port, GREEN_LED_Pin, (state == ON) ? GPIO_PIN_SET : GPIO_PIN_RESET);
+  }
+
+  if (type == LIGHT_RED)
+  {
+    HAL_GPIO_WritePin(RED_LED_GPIO_Port, RED_LED_Pin, (state == ON) ? GPIO_PIN_SET : GPIO_PIN_RESET);
   }
 }
 

@@ -1,5 +1,5 @@
 /**
-* @file         lcd.h
+* @file         initial.h
 * @author       Weyne Chen
 * @version      V01
 * @date         2017.09.24
@@ -8,11 +8,11 @@
 * @attention    COPYRIGHT WEYNE
 **/
 
-#ifndef __LCD_H
-#define __LCD_H
+#ifndef __INITIAL_H
+#define __INITIAL_H
 
+void LCD_SendInitialCode(void);
 
-void LCD_Init(void);
 
 
 #endif

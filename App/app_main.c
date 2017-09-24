@@ -13,6 +13,11 @@
 
 void APP_Run(void)
 {
+  BSP_SetIndicatorLight(LIGHT_RED, ON);
+  BSP_SetLCDType(MIPI);
+
+  LCD_Init();
+
   while (1)
   {
     KeyTypeDef key = Key_Scan();

@@ -19,8 +19,8 @@ typedef enum
 
 void Flicker(void);
 void FillFull(uint8_t r, uint8_t g, uint8_t b);
-void CrossTalk(void);
-void Chessboard();
+void Crosstalk(void);
+void Chessboard(void);
 void Gradient(GradientColorTypeDef type, DirTypeDef dir);
 void Frame(void);
 void ColorBarH(void);
