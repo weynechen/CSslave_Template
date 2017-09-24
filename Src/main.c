@@ -95,7 +95,6 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   MX_ADC1_Init();
-
   /* Initialize interrupts */
   MX_NVIC_Init();
 
@@ -103,39 +102,8 @@ int main(void)
   printf("\n--CD310--\n");
   /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    Key_Scan();
+  APP_Run();
 
-    switch (CtrlKey)
-    {
-    case KEY_UP:
-      break;
-
-    case KEY_DOWN:
-      break;
-
-    case KEY_POWER:
-      break;
-
-    case KEY_MTP:
-      break;
-
-    case KEY_TP:
-      break;
-
-    default:
-      break;
-    }
-    CtrlKey = KEY_NULL;
-
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
-  /* USER CODE END 3 */
 }
 
 

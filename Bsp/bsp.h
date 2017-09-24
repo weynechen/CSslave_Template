@@ -23,9 +23,7 @@ typedef enum
   KEY_NULL = 0xff,
 } KeyTypeDef;
 
-void Key_Scan(void);
-
-extern KeyTypeDef CtrlKey;
+KeyTypeDef Key_Scan(void);
 /********************************************/
 
 /***************时钟配置********************/
@@ -106,8 +104,8 @@ typedef enum
   RGB_SPI_DATA,
 } SPIDataCommandTypeDef;
 
-void RGB_SPIWrite_16Bit(uint16_t address, uint8_t data, SPIEdgeTypeDef edge);
 uint8_t RGB_SPIRead_16Bit(uint16_t address, SPIEdgeTypeDef edge);
+void RGB_SPIWrite_16Bit(uint16_t address, uint8_t data, SPIEdgeTypeDef edge);
 void RGB_SPIWrite8Bit(uint8_t data, SPIDataCommandTypeDef rs);
 void RGB_SPIWrite9Bit(uint8_t data, SPIDataCommandTypeDef rs);
 
@@ -149,6 +147,6 @@ MIPI_ReadTypeDef MIPI_DcsRead(uint8_t address, uint16_t length, uint8_t *return_
 MIPI_ReadTypeDef MIPI_GenericRead(uint8_t adr, uint16_t l, uint8_t *return_value);
 /****************************************************/
 
-
+void APP_Run(void);
 #endif
 /********************* (C) COPYRIGHT WEYNE CHEN *******END OF FILE ********/

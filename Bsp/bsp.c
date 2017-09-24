@@ -16,16 +16,17 @@
 #include "sys.h"
 #include "tim.h"
 
-KeyTypeDef CtrlKey = KEY_NULL;
 
-void Key_Scan(void)
+KeyTypeDef Key_Scan(void)
 {
+  KeyTypeDef ctrl_key = KEY_NULL;
+
   if (HAL_GPIO_ReadPin(GPIOE, KEY_POWER_Pin) == GPIO_PIN_RESET)
   {
     HAL_Delay(30);
     while (HAL_GPIO_ReadPin(GPIOE, KEY_POWER_Pin) == GPIO_PIN_RESET)
     {
-      CtrlKey = KEY_POWER;
+      ctrl_key = KEY_POWER;
     }
   }
   else if (HAL_GPIO_ReadPin(GPIOE, KEY_UP_Pin) == GPIO_PIN_RESET)
@@ -39,11 +40,11 @@ void Key_Scan(void)
     }
     if (times > 2000)
     {
-      CtrlKey = KEY_TP;
+      ctrl_key = KEY_TP;
     }
     else
     {
-      CtrlKey = KEY_UP;
+      ctrl_key = KEY_UP;
     }
   }
   else if (HAL_GPIO_ReadPin(GPIOE, KEY_DOWN_Pin) == GPIO_PIN_RESET)
@@ -51,7 +52,7 @@ void Key_Scan(void)
     HAL_Delay(30);
     while (HAL_GPIO_ReadPin(GPIOE, KEY_DOWN_Pin) == GPIO_PIN_RESET)
     {
-      CtrlKey = KEY_DOWN;
+      ctrl_key = KEY_DOWN;
     }
   }
   else if (HAL_GPIO_ReadPin(GPIOB, KEY_MTP_Pin) == GPIO_PIN_RESET)
@@ -59,9 +60,11 @@ void Key_Scan(void)
     HAL_Delay(30);
     while (HAL_GPIO_ReadPin(GPIOB, KEY_MTP_Pin) == GPIO_PIN_RESET)
     {
-      CtrlKey = KEY_MTP;
+      ctrl_key = KEY_MTP;
     }
   }
+
+  return ctrl_key;
 }
 
 
@@ -1147,10 +1150,12 @@ void SSD2828_Reset(void)
   MIPI_SetMode(LP);
 }
 
+
 void SSD2828_ShutDown(uint8_t state)
 {
   SSD2828_SHUT = (uint8_t)state & 0x01;
 }
+
 
 void MIPI_DcsShortWrite(uint8_t n)
 {
@@ -1172,6 +1177,7 @@ void MIPI_DcsShortWrite(uint8_t n)
   SSD2828_WriteReg(0xbe, 0x00, n);
   SSD2828_WriteCmd(0xbf);
 }
+
 
 void MIPI_DcsLongWrite(uint32_t n)
 {
