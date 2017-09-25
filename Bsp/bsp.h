@@ -47,15 +47,16 @@ typedef struct
 } LCDTimingParaTypeDef;
 extern LCDTimingParaTypeDef LCDTiming;
 
-void LCDDrv_WriteData(uint8_t para);
-void LCDDrv_SetTiming(void);
-void LCDDrv_OpenRGB(void);
-void LCDDrv_CloseRGB(void);
-void LCDDrv_EnterLVDS(uint8_t mode);
-void LCDDrv_SetPattern(void);
-void LCDDrv_SetXY(uint16_t x, uint16_t y);
-void LCDDrv_SetCharIndex(uint8_t frame);
-void LCDDrv_ShowPattern(uint32_t data);
+void TG_WriteData(uint8_t para);
+void TG_DirectIO(uint8_t r, uint8_t g, uint8_t b);
+void TG_SetTiming(void);
+void TG_OpenVideo(void);
+void TG_CloseVideo(void);
+void TG_EnterLVDS(uint8_t mode);
+void TG_StartLoad(void);
+void TG_SetXY(uint16_t x, uint16_t y);
+void TG_SetCharIndex(uint8_t frame);
+void TG_ShowPattern(uint32_t data);
 
 /***************************************/
 

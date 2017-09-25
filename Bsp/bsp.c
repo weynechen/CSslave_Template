@@ -16,11 +16,11 @@
 #include "sys.h"
 #include "tim.h"
 
-#define ADDR_FLASH_PAGE_10     ((uint32_t)0x08005000) /* Base @ of Page 10, 2 Kbytes */
-#define ADDR_FLASH_PAGE_5      ((uint32_t)0x08002800) /* Base @ of Page 5, 2 Kbytes */
+#define ADDR_FLASH_PAGE_10    ((uint32_t)0x08005000)  /* Base @ of Page 10, 2 Kbytes */
+#define ADDR_FLASH_PAGE_5     ((uint32_t)0x08002800)  /* Base @ of Page 5, 2 Kbytes */
 
-#define KEY_STORE_ADDRESS ADDR_FLASH_PAGE_10
-#define BOOT_KEY_ADDRESS ADDR_FLASH_PAGE_5
+#define KEY_STORE_ADDRESS     ADDR_FLASH_PAGE_10
+#define BOOT_KEY_ADDRESS      ADDR_FLASH_PAGE_5
 
 //KEY
 const uint32_t __attribute__((at(KEY_STORE_ADDRESS + 20))) KeyStore = 0x5A2F5D81;
@@ -449,7 +449,7 @@ LCDTimingParaTypeDef LCDTiming;
   }                                     \
   while (0)
 
-/* 当NE使能以后，可以使用下面的简化操作*/
+/* 当NE使能以后�����可以使用下面的简化操作*/
 //#define FPGA_WRITE_CMD(x) *(__IO uint8_t *)FSMC_LCD_CMD = x
 //#define FPGA_WRITE_DATA(x) *(__IO uint8_t *)FSMC_LCD_DATA = x
 
@@ -476,13 +476,13 @@ static void FPGAWrite16BitData(uint16_t data)
 }
 
 
-void LCDDrv_WriteData(uint8_t para)
+void TG_WriteData(uint8_t para)
 {
   FPGA_WRITE_DATA(para);
 }
 
 
-void LCDDrv_SetTiming(void)
+void TG_SetTiming(void)
 {
   MCLK_Init(LCDTiming.DCLK);
   HAL_Delay(50);
@@ -504,27 +504,34 @@ void LCDDrv_SetTiming(void)
 }
 
 
-void LCDDrv_OpenRGB(void)
+void TG_OpenVideo(void)
 {
   FPGA_WRITE_CMD(0x29);
 }
 
 
-void LCDDrv_CloseRGB(void)
+void TG_CloseVideo(void)
 {
   FPGA_WRITE_CMD(0x28);
 }
 
 
-void LCDDrv_EnterLVDS(uint8_t mode)
+void TG_EnterLVDS(uint8_t mode)
 {
   FPGA_WRITE_CMD(0x25);
   FPGA_WRITE_DATA(mode);
 }
 
 
-void LCDDrv_SetPattern(void)
+void TG_StartLoad(void)
 {
+  
+  FPGA_WRITE_CMD(0x1B);
+  FPGA_WRITE_DATA(0xAA);
+  FPGA_WRITE_DATA(0xAA);
+  FPGA_WRITE_DATA(0xAA);
+  HAL_Delay(1);
+  
   FPGA_WRITE_CMD(0x2C);
 }
 
@@ -541,7 +548,7 @@ static int32_t CalRAMAddress(uint8_t frame)
 }
 
 
-void LCDDrv_SetXY(uint16_t x, uint16_t y)
+void TG_SetXY(uint16_t x, uint16_t y)
 {
   uint32_t address = 0;
   uint8_t i        = 0;
@@ -562,7 +569,7 @@ void LCDDrv_SetXY(uint16_t x, uint16_t y)
 }
 
 
-void LCDDrv_SetCharIndex(uint8_t frame)
+void TG_SetCharIndex(uint8_t frame)
 {
   uint32_t address = 0;
   uint8_t i        = 0;
@@ -581,7 +588,16 @@ void LCDDrv_SetCharIndex(uint8_t frame)
 
 #define FPGA_IO_MODE    0xFF000000
 
-void LCDDrv_ShowPattern(uint32_t data)
+void TG_DirectIO(uint8_t r, uint8_t g, uint8_t b)
+{
+  FPGA_WRITE_CMD(0x1B);
+  FPGA_WRITE_DATA(r);
+  FPGA_WRITE_DATA(g);
+  FPGA_WRITE_DATA(b);
+}
+
+
+void TG_ShowPattern(uint32_t data)
 {
   uint32_t address = 0;
   uint8_t i        = 0;

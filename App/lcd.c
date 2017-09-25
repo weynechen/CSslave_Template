@@ -140,8 +140,9 @@ void LCD_PowerOffSequence(void)
 
 static void LoadPatterns(void)
 {
-  LCDDrv_SetPattern();
+  Crosstalk();
   Frame();
+  printf("Pattern load end\n");
 }
 
 
@@ -159,13 +160,13 @@ void LCD_Init(void)
   LCDTiming.VFPD = 16;
   LCDTiming.VSPW = 8;
 
-  LCDDrv_SetTiming();
+  TG_SetTiming();
   SSD2828_Init(4, 480);
   Power_SetBLCurrent(0);
   LCD_PowerOnSequence();
   LCD_SendInitialCode();
   Power_SetBLCurrent(40);
-  LCDDrv_OpenRGB();
+  TG_OpenVideo();
   MIPI_SetMode(VD);
   LoadPatterns();
 }

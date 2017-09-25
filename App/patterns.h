@@ -17,8 +17,20 @@ typedef enum
   DIR_V,
 } DirTypeDef;
 
+#define PATTERN_MAX_NUM    32
+typedef struct
+{
+  uint16_t counter;
+  uint16_t extra;
+  uint32_t data[PATTERN_MAX_NUM];
+  uint16_t curr;
+} PatternTypeDef;
+
+extern PatternTypeDef Patterns;
+
 void Flicker(void);
-void FillFull(uint8_t r, uint8_t g, uint8_t b);
+void FillFullMemory(uint8_t r, uint8_t g, uint8_t b);
+void FillFullDirect(uint8_t r, uint8_t g, uint8_t b);
 void Crosstalk(void);
 void Chessboard(void);
 void Gradient(GradientColorTypeDef type, DirTypeDef dir);
@@ -28,5 +40,7 @@ void ColorBarV(void);
 void SnowDot(void);
 void RGBBar(void);
 void RGBLevel(void);
+
+
 
 #endif
