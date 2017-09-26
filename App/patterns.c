@@ -5,9 +5,10 @@
 
 PatternTypeDef Patterns =
 {
-  .extra   = 0,
-  .counter = 0,
-  .curr    = 0,
+  .io_counter = 0,
+  .extra      = 0,
+  .counter    = 0,
+  .curr       = 0,
 };
 
 
@@ -24,7 +25,7 @@ static void Start(void)
 
 static void End(void)
 {
-  (IsLoadPattern) ? (Patterns.data[Patterns.counter++] = Patterns.counter) : (Patterns.extra += (Patterns.extra == 0) ? Patterns.counter : 1);
+  (IsLoadPattern) ? (Patterns.data[Patterns.counter++] = Patterns.counter - Patterns.io_counter) : (Patterns.extra += (Patterns.extra == 0) ? Patterns.counter : 1);
   HAL_Delay(500);
 }
 
@@ -99,6 +100,10 @@ void FillFullDirect(uint8_t r, uint8_t g, uint8_t b)
 
   TG_DirectIO(r, g, b);
   (IsLoadPattern) ? (Patterns.data[Patterns.counter++] = color) : (Patterns.extra += (Patterns.extra == 0) ? Patterns.counter : 1);
+  if (IsLoadPattern)
+  {
+    Patterns.io_counter++;
+  }
 }
 
 
@@ -316,7 +321,7 @@ void Gradient(GradientColorTypeDef type, DirTypeDef dir)
   {
     if (dir == DIR_V)
     {
-      gra_color = (x * 255) / factor;
+      gra_color = (y * 255) / factor;
     }
     for (x = 0; x < lcd_h; x++)
     {
@@ -664,7 +669,8 @@ void RGBLevel(void)
   End();
 }
 
-#define BUFFER_SIZE 8192
+
+#define BUFFER_SIZE    8192
 uint8_t SystemBuf[BUFFER_SIZE];
 
 void ShowPicture(char *file_name)
@@ -676,7 +682,7 @@ void ShowPicture(char *file_name)
   uint32_t pic_size = 0;
 
   Start();
-  
+
 
   res = f_open(&fsrc, file_name, FA_OPEN_EXISTING | FA_READ);
   if (res != 0)
@@ -708,5 +714,4 @@ void ShowPicture(char *file_name)
   f_close(&fsrc);
 
   End();
-  
 }

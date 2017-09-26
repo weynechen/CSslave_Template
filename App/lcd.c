@@ -155,6 +155,9 @@ static void LoadPatterns(void)
 {
   LoadPatternStart();
 
+  ShowPicture("P720128001.BIN");
+  SetPatternDelay(500);  
+
   Crosstalk();
   SetPatternDelay(500);
   
@@ -176,9 +179,16 @@ static void LoadPatterns(void)
   FillFullDirect(0, 0, 0xff);
   SetPatternDelay(500);
 
-  ShowPicture("P720128001.BIN");
-  SetPatternDelay(500);  
+  RGBBar();
+  SetPatternDelay(500);
 
+  Gradient(GRA_GRAY,DIR_V);
+  SetPatternDelay(500);
+  
+  Gradient(GRA_RED,DIR_H);
+  SetPatternDelay(500);
+
+  
   LoadPatternEnd();
 }
 

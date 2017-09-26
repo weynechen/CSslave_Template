@@ -21,6 +21,7 @@ typedef enum
 typedef struct
 {
   uint16_t counter;
+  uint16_t io_counter;
   uint16_t extra;
   uint32_t data[PATTERN_MAX_NUM];
   uint32_t delay[PATTERN_MAX_NUM];
