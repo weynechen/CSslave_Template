@@ -11,6 +11,17 @@
 #include "initial.h"
 #include "bsp.h"
 
+void LCD_SleepIn(void)
+{
+  MIPI_DcsShortWrite(1);
+  MIPI_WriteData(0x28);
+  HAL_Delay(20);  
+  MIPI_DcsShortWrite(1);
+  MIPI_WriteData(0x10);
+  HAL_Delay(20);
+
+}
+
 void LCD_SendInitialCode(void)
 {
   MIPI_GenericLongWrite(2);

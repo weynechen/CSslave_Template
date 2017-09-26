@@ -12,7 +12,7 @@
 #define __INITIAL_H
 
 void LCD_SendInitialCode(void);
-
+void LCD_SleepIn(void);
 
 
 #endif

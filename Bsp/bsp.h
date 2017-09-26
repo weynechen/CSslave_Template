@@ -11,16 +11,17 @@
 #ifndef __BSP_H
 #define __BSP_H
 #include "stm32f1xx_hal.h"
+#include "stdbool.h"
 
 /*****************按键接口*************************/
 typedef enum
 {
+  KEY_NULL,
   KEY_UP,
   KEY_DOWN,
   KEY_POWER,
   KEY_MTP,
   KEY_TP,
-  KEY_NULL = 0xff,
 } KeyTypeDef;
 
 KeyTypeDef Key_Scan(void);

@@ -135,17 +135,57 @@ void LCD_PowerOnSequence(void)
 
 void LCD_PowerOffSequence(void)
 {
+  LCD_SleepIn();
+  LCD_Reset(0);
+  Power_SetState(POWER_OUT5V, OFF);
+  Power_SetState(POWER_VSN, OFF);
+  Power_SetState(POWER_VSP, OFF);
+  Power_SetState(POWER_1V8, OFF);
+  Power_SetState(POWER_2V8, OFF);
 }
 
 
+
+/*
+1. LoadPatternStart();   LoadPatternEnd(); 不可去掉
+2. 遵循一个画面加一个延时的方式，无延时请设置延时为0
+3. 延时是指自动跑的时候，两个画面之间的延时。使用按键时延时不起作用
+*/
 static void LoadPatterns(void)
 {
+  LoadPatternStart();
+
   Crosstalk();
+  SetPatternDelay(500);
+  
   Frame();
-  printf("Pattern load end\n");
+  SetPatternDelay(500);
+  
+  FillFullDirect(0, 0, 0);
+  SetPatternDelay(500);
+  
+  FillFullDirect(0xff, 0xff, 0xff);
+  SetPatternDelay(500);
+  
+  FillFullDirect(0xff, 0, 0);
+  SetPatternDelay(500);
+  
+  FillFullDirect(0, 0xff, 0);
+  SetPatternDelay(500);
+  
+  FillFullDirect(0, 0, 0xff);
+  SetPatternDelay(500);
+
+  ShowPicture("P720128001.BIN");
+  SetPatternDelay(500);  
+
+  LoadPatternEnd();
 }
 
 
+/*
+1. 时序参数一定要在最前面配置
+*/
 void LCD_Init(void)
 {
   LCDTiming.DCLK = 64;
@@ -171,5 +211,13 @@ void LCD_Init(void)
   LoadPatterns();
 }
 
+
+void LCD_ReLight(void)
+{
+  SSD2828_Init(4, 480);
+  LCD_PowerOnSequence();
+  LCD_SendInitialCode();
+  MIPI_SetMode(VD);  
+}
 
 /********************* (C) COPYRIGHT WEYNE CHEN *******END OF FILE ********/

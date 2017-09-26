@@ -13,6 +13,8 @@
 
 
 void LCD_Init(void);
+void LCD_ReLight(void);
+void LCD_PowerOffSequence(void);
 
 
 #endif

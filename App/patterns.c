@@ -1,7 +1,7 @@
 #include "patterns.h"
 #include "bsp.h"
-#include "stdbool.h"
-
+#include "ff.h"
+#include "diskio.h"
 
 PatternTypeDef Patterns =
 {
@@ -13,8 +13,23 @@ PatternTypeDef Patterns =
 
 static bool IsLoadPattern = false;
 
+/*
+ * 编写新的pattern时，请一定要在函数前后插入start()和End()
+ */
+static void Start(void)
+{
+  TG_StartLoad();
+}
 
-void StartLoadPattern(void)
+
+static void End(void)
+{
+  (IsLoadPattern) ? (Patterns.data[Patterns.counter++] = Patterns.counter) : (Patterns.extra += (Patterns.extra == 0) ? Patterns.counter : 1);
+  HAL_Delay(500);
+}
+
+
+void LoadPatternStart(void)
 {
   IsLoadPattern = true;
 }
@@ -26,16 +41,9 @@ void LoadPatternEnd(void)
 }
 
 
-static void Start(void)
+void SetPatternDelay(uint16_t delay)
 {
-  TG_StartLoad();
-}
-
-
-static void End(void)
-{
-  (IsLoadPattern) ? (Patterns.data[Patterns.counter++] = Patterns.counter) : (Patterns.extra += (Patterns.extra == 0) ? Patterns.counter : 1);
-  HAL_Delay(500);
+  Patterns.delay[Patterns.counter - 1] = delay;
 }
 
 
@@ -61,6 +69,9 @@ void Flicker(void)
 }
 
 
+/*
+ * 该函数刷的纯色画面会存入内存中
+ */
 void FillFullMemory(uint8_t r, uint8_t g, uint8_t b)
 {
   uint32_t i, j;
@@ -79,9 +90,12 @@ void FillFullMemory(uint8_t r, uint8_t g, uint8_t b)
 }
 
 
+/*
+ * 该函数刷的纯色画面不会存入内存中
+ */
 void FillFullDirect(uint8_t r, uint8_t g, uint8_t b)
 {
-  uint32_t color = (r << 16) | (g << 8) | b;
+  uint32_t color = 0xFF000000 | (r << 16) | (g << 8) | b;
 
   TG_DirectIO(r, g, b);
   (IsLoadPattern) ? (Patterns.data[Patterns.counter++] = color) : (Patterns.extra += (Patterns.extra == 0) ? Patterns.counter : 1);
@@ -648,4 +662,51 @@ void RGBLevel(void)
     }
   }
   End();
+}
+
+#define BUFFER_SIZE 8192
+uint8_t SystemBuf[BUFFER_SIZE];
+
+void ShowPicture(char *file_name)
+{
+  uint32_t i;
+  FRESULT res;
+  UINT br;
+  FIL fsrc;
+  uint32_t pic_size = 0;
+
+  Start();
+  
+
+  res = f_open(&fsrc, file_name, FA_OPEN_EXISTING | FA_READ);
+  if (res != 0)
+  {
+    printf("Error:open file error,error code %d \n", res);
+    return;
+  }
+
+  for ( ; ; )
+  {
+    br  = 1;
+    res = f_read(&fsrc, SystemBuf, BUFFER_SIZE, &br);
+    if (res || (br == 0))
+    {
+      break;
+    }
+    for (i = 0; i < br; i++)
+    {
+      TG_WriteData(SystemBuf[i]);
+      pic_size++;
+    }
+  }
+
+  if (pic_size != (uint32_t)LCDTiming.LCDH * LCDTiming.LCDV * 3)
+  {
+    printf("Error:picture size %d\n", pic_size);
+  }
+
+  f_close(&fsrc);
+
+  End();
+  
 }

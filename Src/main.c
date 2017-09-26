@@ -97,7 +97,7 @@ int main(void)
   MX_ADC1_Init();
   /* Initialize interrupts */
   MX_NVIC_Init();
-
+  
   /* USER CODE BEGIN 2 */
   printf("\n--CD310--\n");
   BSP_Init();

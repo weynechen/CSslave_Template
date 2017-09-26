@@ -23,10 +23,15 @@ typedef struct
   uint16_t counter;
   uint16_t extra;
   uint32_t data[PATTERN_MAX_NUM];
+  uint32_t delay[PATTERN_MAX_NUM];
   uint16_t curr;
 } PatternTypeDef;
 
 extern PatternTypeDef Patterns;
+void LoadPatternStart(void);
+void LoadPatternEnd(void);
+
+void SetPatternDelay(uint16_t delay);
 
 void Flicker(void);
 void FillFullMemory(uint8_t r, uint8_t g, uint8_t b);
@@ -40,7 +45,7 @@ void ColorBarV(void);
 void SnowDot(void);
 void RGBBar(void);
 void RGBLevel(void);
-
+void ShowPicture(char *file_name);
 
 
 #endif
